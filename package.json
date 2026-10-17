@@ -1,0 +1,38 @@
+{
+    "name": "electron-white-gui",
+    "version": "1.0.0",
+    "main": "main.ts",
+    "scripts": {
+        "dev": "vite",
+        "electron": "tsc -p tsconfig.electron.json && electron dist-electron/main.js",
+        "start": "npm-run-all -p --race electron dev"
+    },
+    "devDependencies": {
+        "@types/node": "^26.6.5",
+        "@types/react": "^19.3.0",
+        "@types/react-dom": "^19.3.0",
+        "electron": "^44.8.0",
+        "npm-run-all": "^4.1.5",
+        "ts-loader": "^9.6.2",
+        "typescript": "^7.0.2"
+    },
+    "description": "A desktop Project Launcher App with a Old Library Aesthetic with the goal of making Project management simple and Fun. I hope This Project can help add some Soul Behind the Syntax.",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/JohnNBermudez/ApothecaryProjects.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "commonjs",
+    "bugs": {
+        "url": "https://github.com/JohnNBermudez/ApothecaryProjects/issues"
+    },
+    "homepage": "https://github.com/JohnNBermudez/ApothecaryProjects#readme",
+    "dependencies": {
+        "@vitejs/plugin-react": "^6.1.2",
+        "react": "^19.3.1",
+        "react-dom": "^19.3.1",
+        "vite": "^8.3.4"
+    }
+}

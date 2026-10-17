@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "node16",
+        "moduleResolution": "node16",
+        "strict": true,
+
+        "rootDir": "./electron",
+        "outDir": "./dist-electron",
+
+        "paths": {
+            "@/*": ["./src/*"]
+        },
+    },
+    "include": ["electron"]
+}
