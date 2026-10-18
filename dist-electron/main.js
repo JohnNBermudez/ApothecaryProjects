@@ -5,7 +5,7 @@ function createWindow() {
     const win = new electron_1.BrowserWindow({
         width: 1280,
         height: 800,
-        backgroundColor: "#d8c468",
+        backgroundColor: "#3b2415",
         fullscreenable: true
     });
     // Load Vite dev server
@@ -13,7 +13,11 @@ function createWindow() {
     //Optional: Open DevTools during development
     win.webContents.openDevTools();
     win.webContents.on("before-input-event", (event, input) => {
-        if (input.key === "Escape" && win.isFullScreen()) {
+        if (input.key === "F11") {
+            win.setFullScreen(!win.isFullScreen());
+            event.preventDefault();
+        }
+        else if (input.key === "Escape" && win.isFullScreen()) {
             win.setFullScreen(false);
             event.preventDefault();
         }
