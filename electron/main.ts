@@ -7,6 +7,8 @@ function createWindow()
     ({
         width: 1280,
         height: 800,
+        minWidth: 662,
+        minHeight: 696,
         backgroundColor: "#3b2415",
         fullscreenable: true
     });
