@@ -19,9 +19,17 @@ body,
   overflow: hidden;
 }
 
-button {
+.button {
+  width: 50px;
+  height: 50px;
+
+  border: rgb(160 128 174 / 70%);
+  border-radius: 0%;
+
+  /* background-image: ; */
   font: inherit;
 }
+
 
 .desktop {
   position: fixed;
@@ -102,11 +110,11 @@ button {
 .desktop-item__tooltip {
   position: absolute;
   z-index: 3;
-  top: 50%;
+  top: 75%; /* position 105% for name appearing on shelf. */
   left: 50%;
   visibility: hidden;
   padding: 4px 6px;
-  border: 1px solid rgb(160 128 174 / 70%);
+  border: 2px solid rgb(160 128 174 / 70%);
   border-radius: 2px;
   background: rgb(16 0 16 / 88%);
   color: #fff;

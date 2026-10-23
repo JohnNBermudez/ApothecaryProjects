@@ -5,6 +5,8 @@ function createWindow() {
     const win = new electron_1.BrowserWindow({
         width: 1280,
         height: 800,
+        minWidth: 662,
+        minHeight: 696,
         backgroundColor: "#3b2415",
         fullscreenable: true
     });

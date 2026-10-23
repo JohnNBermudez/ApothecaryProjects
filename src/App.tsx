@@ -13,9 +13,9 @@ const BOOKSHELF_HEIGHT = 696;
 const SLOT_WIDTH = 90;
 const SLOT_GAP = 1;
 const SHELF_ROWS = [
-  { top: 8, bottom: 240 },
-  { top: 248, bottom: 472 },
-  { top: 488, bottom: 688 },
+  { top: 9, bottom: 237 },
+  { top: 260, bottom: 470 },
+  { top: 490, bottom: 686 },
 ];
 const DRAG_THRESHOLD = 4;
 
