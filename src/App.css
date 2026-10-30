@@ -1,3 +1,8 @@
+/* 
+  App.css
+  Styles for the main application interface, including the utility column and the bookshelf workspace.
+  It defines the appearance of buttons, desktop items, tooltips, and other UI elements.
+*/
 :root {
   font-family: "Segoe UI", sans-serif;
   color: #f5deb3;
@@ -5,11 +10,11 @@
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
-
+/* Reset box-sizing for all elements to border-box for consistent sizing */
 * {
   box-sizing: border-box;
 }
-
+/* Set the width, height, and margin for html, body, and #root to ensure the application takes up the full viewport */
 html,
 body,
 #root {
@@ -18,7 +23,7 @@ body,
   margin: 0;
   overflow: hidden;
 }
-
+/* Define the appearance of buttons, including size, border, and font */
 .button {
   width: 50px;
   height: 50px;
@@ -29,27 +34,158 @@ body,
   /* background-image: ; */
   font: inherit;
 }
-
-
+/* Define the appearance of the (desktop), including position, size, and background color */
 .desktop {
   position: fixed;
   inset: 0;
-  width: 100vw;
-  height: 100vh;
   background-color: #3b2415;
+}
+/* Define the appearance of the (utility column), including position, size, and background color */
+.utility-column {
+  position: absolute;
+  z-index: 5;
+  inset: 0 auto 0 0;
+  display: flex;
+  width: 96px;
+  flex: 0 0 96px;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 10px;
+  border-right: 2px solid rgb(229 190 118 / 46%);
+  background: #3b2415;
+}
+/* Define the appearance of the (add book button), including size, border, background gradient, and hover/focus effects */
+.add-book-button {
+  display: flex;
+  width: 74px;
+  min-height: 84px;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 7px 4px;
+  border: 2px solid #e5be76;
+  border-radius: 6px;
+  background: linear-gradient(145deg, #8a5524, #563019);
+  box-shadow: inset 0 0 0 2px rgb(51 27 11 / 34%), 2px 3px 0 #2a160b;
+  color: #fff2d7;
+  cursor: pointer;
+  font: inherit;
+}
+/* Define the hover and focus-visible effects for the (add book button) */
+.add-book-button:hover,
+.add-book-button:focus-visible {
+  filter: brightness(1.12);
+}
+/* Define the focus-visible outline for the (add book button) */
+.add-book-button:focus-visible {
+  outline: 2px solid #fff2d7;
+  outline-offset: 3px;
+}
+/* Define the appearance of the (utility action button), including size, border, background gradient, and hover/focus effects */
+.utility-action-button {
+  display: flex;
+  width: 74px;
+  min-height: 66px;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 5px 3px;
+  border: 2px solid #9d7543;
+  border-radius: 6px;
+  background: linear-gradient(145deg, #754621, #4b2b18);
+  box-shadow: inset 0 0 0 2px rgb(51 27 11 / 25%), 2px 3px 0 #2a160b;
+  color: #fff2d7;
+  cursor: pointer;
+  font: inherit;
+}
+/* Define the hover and focus-visible effects for the (utility action button) */
+.utility-action-button:hover,
+.utility-action-button:focus-visible {
+  filter: brightness(1.12);
+}
+/* Define the focus-visible outline for the (utility action button) */
+.utility-action-button:focus-visible {
+  outline: 2px solid #fff2d7;
+  outline-offset: 3px;
+}
+/* Define the appearance of the (utility action button) when it is active, including border color, background gradient, and box shadow */
+.utility-action-button--active {
+  border-color: #f29a79;
+  background: linear-gradient(145deg, #9b3f28, #61251b);
+  box-shadow: inset 0 0 0 2px rgb(51 27 11 / 25%), 0 0 8px rgb(242 154 121 / 65%);
+}
+/* Define the appearance of the (utility action button icon), including font size, weight, line height, and text shadow */
+.utility-action-button__icon {
+  font-size: 27px;
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: 1px 1px 2px #291408;
+}
+/* Define the appearance of the (utility action button icon) when it is a sort button, including font size */
+.utility-action-button__icon--sort {
+  font-size: 19px;
+}
+/* Define the appearance of the (utility action button label), including font size, line height, text alignment, and text shadow */
+.utility-action-button__label {
+  font-size: 11px;
+  line-height: 1.1;
+  text-align: center;
+  text-shadow: 1px 1px 2px #291408;
+}
+/* Define the appearance of the (add book button icon), including display, width, height, and object fit */
+.add-book-button__icon {
+  display: block;
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+/* Define the appearance of the (add book button label), including font size, line height, and text shadow */
+.add-book-button__label {
+  font-size: 12px;
+  line-height: 1;
+  text-shadow: 1px 1px 2px #291408;
+}
+/* Define the appearance of the (utility column status), including width, margin, color, font size, line height, and overflow wrap */
+.utility-column__status {
+  width: 100%;
+  margin: 0;
+  color: #fff2d7;
+  font-size: 12px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+/* Define the appearance of the (utility column hint), including width, margin, color, font size, line height, and text alignment */
+.utility-column__hint {
+  width: 100%;
+  margin: 0;
+  color: #f5deb3;
+  font-size: 11px;
+  line-height: 1.3;
+  text-align: center;
+}
+/* Define the appearance of the (desktop workspace), including position, inset, minimum width, background properties, and image rendering */
+.desktop-workspace {
+  position: absolute;
+  inset: 0 0 0 96px;
+  min-width: 0;
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
   image-rendering: pixelated;
 }
-
+/* Define the appearance of the (desktop surface), including position, inset, overflow, and touch action */
 .desktop-surface {
   position: absolute;
   inset: 0;
   overflow: hidden;
   touch-action: none;
 }
-
+/* Define the appearance of the (drop slot), including position, border, border radius, background color, pointer events, and transform */
 .drop-slot {
   position: absolute;
   border: 2px solid rgb(225 225 225 / 34%);
@@ -58,12 +194,12 @@ body,
   pointer-events: none;
   transform: translate(-50%, -50%);
 }
-
+/* Define the appearance of the (drop slot) when it is a target, including border color and background color */
 .drop-slot--target {
   border-color: rgb(245 245 245 / 72%);
   background: rgb(230 230 230 / 48%);
 }
-
+/* Define the appearance of the (desktop item), including position, z-index, display, flex properties, padding, border, color, background, cursor, text alignment, text shadow, user select, and transform */
 .desktop-item {
   position: absolute;
   z-index: 1;
@@ -82,20 +218,31 @@ body,
   user-select: none;
   transform: translate(-50%, -50%);
 }
-
+/* Define the focus-visible outline and drop shadow for the (desktop item) */
 .desktop-item:focus-visible {
   outline: none;
   filter: drop-shadow(0 0 4px #fff2d7);
 }
-
+/* Define the appearance of the (desktop item) when it is being dragged, including z-index, cursor, and opacity */
 .desktop-item--dragging {
   z-index: 2;
   cursor: grabbing;
   opacity: 0.88;
 }
-
+/* Define the appearance of the (desktop item) when it is deletable, including cursor and drop shadow */
+.desktop-item--deletable {
+  cursor: pointer;
+  filter: drop-shadow(0 0 5px rgb(242 154 121 / 80%));
+}
+/* Define the hover effect for the (desktop item) when it is deletable, including drop shadow */
+.desktop-item--deletable:hover {
+  filter: drop-shadow(0 0 8px #f29a79);
+}
+/* Define the appearance of the (desktop item icon), including display, flex properties, minimum height, width, height, place items, border, border radius, background gradient, box shadow, font size, and line height */
 .desktop-item__icon {
   display: grid;
+  flex: 1 1 auto;
+  min-height: 0;
   width: 100%;
   height: 100%;
   place-items: center;
@@ -106,7 +253,7 @@ body,
   font-size: 30px;
   line-height: 1;
 }
-
+/* Define the appearance of the (desktop item label), including margin, font size, line height, and text shadow */
 .desktop-item__tooltip {
   position: absolute;
   z-index: 3;
@@ -124,7 +271,7 @@ body,
   pointer-events: none;
   transform: translate(-50%, -50%);
 }
-
+/* Define the hover and focus-visible effects for the (desktop item tooltip), making it visible */
 .desktop-item:hover .desktop-item__tooltip,
 .desktop-item:focus-visible .desktop-item__tooltip {
   visibility: visible;

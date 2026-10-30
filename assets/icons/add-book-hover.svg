@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <style>
+    .page { transform-box: fill-box; transform-origin: left center; animation: turn 850ms ease-in-out infinite alternate; }
+    .spark { animation: glow 700ms ease-in-out infinite alternate; }
+    @keyframes turn { from { transform: rotateY(0deg); } to { transform: rotateY(-28deg); } }
+    @keyframes glow { from { opacity: .25; } to { opacity: 1; } }
+  </style>
+  <path d="M9 11h20c5 0 8 3 8 7v36c0-4-3-7-8-7H9z" fill="#8a5524" stroke="#e5be76" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M55 11H37v43c0-4 3-7 8-7h10z" fill="#563019" stroke="#e5be76" stroke-width="3" stroke-linejoin="round"/>
+  <path class="page" d="M13 17h12m-12 5h12m-12 5h12" fill="none" stroke="#f5deb3" stroke-width="2" stroke-linecap="round"/>
+  <path d="M37 18v32" fill="none" stroke="#3b2415" stroke-width="3"/>
+  <path d="M8 11v36m48-36v36" fill="none" stroke="#e5be76" stroke-width="2"/>
+  <path class="spark" d="m49 5 1.5 3.5L54 10l-3.5 1.5L49 15l-1.5-3.5L44 10l3.5-1.5z" fill="#f5deb3"/>
+</svg>
