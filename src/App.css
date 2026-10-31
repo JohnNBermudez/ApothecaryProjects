@@ -1,8 +1,7 @@
 /* 
   App.css
   Styles for the main application interface, including the utility column and the bookshelf workspace.
-  It defines the appearance of buttons, desktop items, tooltips, and other UI elements.
-*/
+  It defines the appearance of buttons, desktop items, tooltips, and other UI elements. */
 :root {
   font-family: "Segoe UI", sans-serif;
   color: #f5deb3;
@@ -199,7 +198,8 @@ body,
   border-color: rgb(245 245 245 / 72%);
   background: rgb(230 230 230 / 48%);
 }
-/* Define the appearance of the (desktop item), including position, z-index, display, flex properties, padding, border, color, background, cursor, text alignment, text shadow, user select, and transform */
+/* Define the appearance of the (desktop item), including position, z-index, display, flex properties, padding, border, color, 
+   background, cursor, text alignment, text shadow, user select, and transform */
 .desktop-item {
   position: absolute;
   z-index: 1;
@@ -238,7 +238,8 @@ body,
 .desktop-item--deletable:hover {
   filter: drop-shadow(0 0 8px #f29a79);
 }
-/* Define the appearance of the (desktop item icon), including display, flex properties, minimum height, width, height, place items, border, border radius, background gradient, box shadow, font size, and line height */
+/* Define the appearance of the (desktop item icon), including display, flex properties, minimum height, width, height, place items, 
+   border, border radius, background gradient, box shadow, font size, and line height */
 .desktop-item__icon {
   display: grid;
   flex: 1 1 auto;

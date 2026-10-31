@@ -1,3 +1,6 @@
+/* This is the TypeScript configuration file for the Electron part of the ApothecaryProjects project.
+   It specifies the compiler options and settings for TypeScript, including the target
+   JavaScript version, module system, and path aliases. */
 {
     "compilerOptions": {
         "target": "ESNext",

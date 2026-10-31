@@ -1,6 +1,9 @@
 import {app, BrowserWindow, dialog, ipcMain, shell} from "electron";
 import * as path from "path";
 
+/* This is the main process file for the ApothecaryProjects Electron application.
+   It sets up the main application window, handles IPC events for file selection and opening,
+   and manages the application's lifecycle events. */
 function createWindow() {
   const win = new BrowserWindow({
     width: 1280,
@@ -18,6 +21,7 @@ function createWindow() {
   win.loadURL("http://localhost:5173");
   win.webContents.openDevTools();
 
+  /* Handle the "before-input-event" to allow toggling full-screen mode with F11 and exiting full-screen mode with Escape. */
   win.webContents.on("before-input-event", (event, input) => {
     if (input.key === "F11") {
       win.setFullScreen(!win.isFullScreen());
@@ -28,6 +32,7 @@ function createWindow() {
     }
   });
 
+  /* Handle the "before-input-event" to allow quitting the application with Ctrl + F4. */
   win.webContents.on("before-input-event", (event, input) => {
     if (input.key === "F4" && input.control) {
       app.quit();
@@ -36,6 +41,7 @@ function createWindow() {
   });
 }
 
+/* Handle the "books:select-file" event to open a dialog to select a file. */
 ipcMain.handle("books:select-file", async (event) => {
   const parentWindow = BrowserWindow.fromWebContents(event.sender);
   const result = parentWindow
@@ -50,6 +56,7 @@ ipcMain.handle("books:select-file", async (event) => {
   return { canceled: false, filePath, fileName: path.basename(filePath) };
 });
 
+/* Handle the "books:open-file" event to open a file using the default application associated with its file type. */
 ipcMain.handle("books:open-file", async (_event, filePath: unknown) => {
   if (typeof filePath !== "string" || filePath.length === 0) {
     throw new Error("A valid file path is required.");
@@ -58,6 +65,7 @@ ipcMain.handle("books:open-file", async (_event, filePath: unknown) => {
   return shell.openPath(filePath);
 });
 
+/* Handle the "ready" event to create the main application window when the app is ready. */
 app.whenReady().then(() => {
   createWindow();
 
@@ -66,6 +74,7 @@ app.whenReady().then(() => {
   });
 });
 
+/* Handle the "window-all-closed" event to quit the application when all windows are closed. */
 app.on("window-all-closed", () => {
   app.quit();
 });
