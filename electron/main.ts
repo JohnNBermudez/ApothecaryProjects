@@ -1,4 +1,5 @@
 import {app, BrowserWindow, dialog, ipcMain, shell} from "electron";
+import { stat } from "node:fs/promises";
 import * as path from "path";
 
 /* This is the main process file for the ApothecaryProjects Electron application.
@@ -65,10 +66,27 @@ ipcMain.handle("books:open-file", async (_event, filePath: unknown) => {
   return shell.openPath(filePath);
 });
 
+/* Handle the "books:file-size" event to return the size of an associated file in bytes. */
+ipcMain.handle("books:file-size", async (_event, filePath: unknown) => {
+  if (typeof filePath !== "string" || filePath.length === 0) {
+    throw new Error("A valid file path is required.");
+  }
+
+  /* Get the file statistics to determine the file size */
+  const fileStats = await stat(filePath);
+  if (!fileStats.isFile()) {
+    throw new Error("The selected path is not a file.");
+  }
+
+  /* Return the file size in bytes */
+  return fileStats.size;
+});
+
 /* Handle the "ready" event to create the main application window when the app is ready. */
 app.whenReady().then(() => {
   createWindow();
 
+  /* Handle the "activate" event to create a new window if no windows exist */
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });

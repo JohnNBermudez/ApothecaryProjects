@@ -1,5 +1,5 @@
 # ApothecaryProjects
-A desktop project launcher with an old-library aesthetic. Add books from the left utility column to select files on your computer; their names and file paths are saved locally, and double-clicking a book opens its file with the operating system's default application.
+A desktop project launcher with an old-library aesthetic. Add books from the left utility column to select files on your computer; their names, file paths, metadata, and bookshelf positions are saved locally, and double-clicking a book opens its file with the operating system's default application.
  
 # PACKAGE.JSON
 package.json file for the ApothecaryProjects project contains metadata about the project, including its name, version, dependencies, scripts, and other configuration settings. 

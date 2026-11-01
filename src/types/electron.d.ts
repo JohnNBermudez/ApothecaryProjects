@@ -11,6 +11,7 @@ declare global {
         fileName?: string;
       }>;
       openFile: (filePath: string) => Promise<string>;
+      getFileSize: (filePath: string) => Promise<number>;
     };
   }
 }

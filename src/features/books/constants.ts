@@ -1,7 +1,6 @@
-import type { Book } from "./types";
-
+/* Constants for the bookshelf and book storage */
 export const BOOKS_STORAGE_KEY = "apothecary-books";
-export const INITIAL_BOOK: Book = { id: "book", name: "Book" };
+export const BOOK_POSITIONS_STORAGE_KEY = "apothecary-book-positions";
 export const BOOKSHELF_WIDTH = 662;
 export const BOOKSHELF_HEIGHT = 696;
 export const SLOT_WIDTH = 90;

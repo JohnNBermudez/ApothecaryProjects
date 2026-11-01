@@ -4,6 +4,7 @@ import { BookshelfSurface } from "./features/books/BookshelfSurface";
 import { UtilityColumn } from "./features/books/UtilityColumn";
 import { useBookshelf } from "./features/books/useBookshelf";
 
+/* This is the main application component that renders the desktop layout with the utility column and bookshelf surface. */
 export default function App() {
   const {
     books,
@@ -15,6 +16,9 @@ export default function App() {
     isAddHovered,
     isDeleteMode,
     statusMessage,
+    utilityColumnLeft,
+    utilityColumnTop,
+    utilityColumnScale,
     surfaceRef,
     setIsAddHovered,
     getItemPosition,
@@ -24,23 +28,32 @@ export default function App() {
     handleDeleteMode,
     handleDeleteBook,
     handleAlphabeticalSort,
+    handleFileSizeSort,
+    handleFileTypeSort,
     handleOpenBook,
     setDrag,
   } = useBookshelf();
 
+  /* Render the main desktop layout with the utility column and bookshelf surface. */
   return (
+    /* Main desktop layout */
     <main className="desktop" aria-label="Apothecary Projects desktop">
       <UtilityColumn
         booksCount={books.length}
         isAddHovered={isAddHovered}
         isDeleteMode={isDeleteMode}
         statusMessage={statusMessage}
+        left={utilityColumnLeft}
+        top={utilityColumnTop}
+        scale={utilityColumnScale}
         onAddBook={handleAddBook}
         onDeleteMode={handleDeleteMode}
         onAlphabeticalSort={handleAlphabeticalSort}
+        onFileSizeSort={handleFileSizeSort}
+        onFileTypeSort={handleFileTypeSort}
         onSetAddHovered={setIsAddHovered}
       />
-
+      
       <section
         className="desktop-workspace"
         style={{ backgroundImage: `url(${BOOKSHELF_IMAGE})` }}

@@ -2,6 +2,7 @@ import type { PointerEvent as ReactPointerEvent, RefObject } from "react";
 import { BookItem } from "./BookItem";
 import type { Book, DragState, Slot } from "./types";
 
+/* Props for the BookshelfSurface component */
 type BookshelfSurfaceProps = {
   surfaceRef: RefObject<HTMLDivElement | null>;
   books: Book[];
@@ -20,6 +21,7 @@ type BookshelfSurfaceProps = {
   onBookPointerDown: (event: ReactPointerEvent<HTMLButtonElement>, book: Book) => void;
 };
 
+/* BookshelfSurface component renders the bookshelf and handles book interactions */
 export function BookshelfSurface({
   surfaceRef,
   books,
@@ -37,6 +39,7 @@ export function BookshelfSurface({
   onOpenBook,
   onBookPointerDown,
 }: BookshelfSurfaceProps) {
+  /* Render the bookshelf surface with all books and drop slots */
   return (
     <div
       ref={surfaceRef}

@@ -2,48 +2,40 @@
    It sets up the main application window, handles IPC events for file selection and opening,
    and manages the application's lifecycle events. */
 "use strict";
-
-/* This function is used to create a binding between an object and a module's property.
-    It checks if the module is an ES module and creates a property descriptor for the binding.
-    If the module is not an ES module, it simply assigns the property value to the object. */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     var desc = Object.getOwnPropertyDescriptor(m, k);
     if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
       desc = { enumerable: true, get: function() { return m[k]; } };
     }
+    /* Define the property on the target object with the descriptor. */
     Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
 }));
 
-/* This function is used to create a binding between an object and a module's property.
-   It checks if the module is an ES module and creates a property descriptor for the binding.
-   If the module is not an ES module, it simply assigns the property value to the object. */
+/* This is a helper function to set the default value of a module.
+   It is used to set the default value of the "default" export of a module. */
 var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
     Object.defineProperty(o, "default", { enumerable: true, value: v });
 }) : function(o, v) {
     o["default"] = v;
 });
-
-/* This function is used to create a binding between an object and a module's property.
-   It checks if the module is an ES module and creates a property descriptor for the binding.
-   If the module is not an ES module, it simply assigns the property value to the object. */
+/* This is a helper function to import a module.
+   It is used to import modules in a way that is compatible with both CommonJS and ES modules. */
 var __importStar = (this && this.__importStar) || (function () {
     var ownKeys = function(o) {
         ownKeys = Object.getOwnPropertyNames || function (o) {
             var ar = [];
             for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            /* Return the array of own property names. */
             return ar;
         };
+        /* Get the own property names of the object. */
         return ownKeys(o);
     };
-
-    /* This function is used to import all exports from a module and return them as an object.
-       It checks if the module is an ES module and returns it directly if so.
-       Otherwise, it creates a new object and copies all properties from the module to the new object,
-       setting the default export to the module itself. */
+    /* This function returns a function that imports a module and ensures it is compatible with both CommonJS and ES modules. */
     return function (mod) {
         if (mod && mod.__esModule) return mod;
         var result = {};
@@ -52,16 +44,16 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
+/* This is a helper function to import a module.
+   It is used to import modules in a way that is compatible with both CommonJS and ES modules. */
+Object.defineProperty(exports, "__esModule", { value: true });
+const electron_1 = require("electron");
+const promises_1 = require("node:fs/promises");
+const path = __importStar(require("path"));
 
 /* This is the main process file for the ApothecaryProjects Electron application.
    It sets up the main application window, handles IPC events for file selection and opening,
    and manages the application's lifecycle events. */
-Object.defineProperty(exports, "__esModule", { value: true });
-const electron_1 = require("electron");
-const path = __importStar(require("path"));
-
-/* Create the main application window with specified dimensions, background color, and web preferences.
-   It loads the application URL and sets up event listeners for keyboard shortcuts to toggle fullscreen and quit the app. */
 function createWindow() {
     const win = new electron_1.BrowserWindow({
         width: 1280,
@@ -75,11 +67,11 @@ function createWindow() {
             preload: path.join(__dirname, "preload.js"),
         },
     });
-    /* Load the application URL and open the DevTools for debugging. */
+    /* Load the Vite dev server URL into the main window. */
     win.loadURL("http://localhost:5173");
-    /* Open the DevTools for debugging purposes. */
     win.webContents.openDevTools();
-    /* Handle the "before-input-event" to allow toggling fullscreen mode with F11 and exiting fullscreen with Escape. */
+    
+/* Handle the "before-input-event" to allow toggling full-screen mode with F11 and exiting full-screen mode with Escape. */
     win.webContents.on("before-input-event", (event, input) => {
         if (input.key === "F11") {
             win.setFullScreen(!win.isFullScreen());
@@ -90,6 +82,7 @@ function createWindow() {
             event.preventDefault();
         }
     });
+    
     /* Handle the "before-input-event" to allow quitting the application with Ctrl + F4. */
     win.webContents.on("before-input-event", (event, input) => {
         if (input.key === "F4" && input.control) {
@@ -99,9 +92,7 @@ function createWindow() {
     });
 }
 
-/* Handle the 'books:select-file' IPC event to open a file selection dialog.
-   It checks if the parent window is available and opens the dialog accordingly.
-   If a file is selected, it returns the file path and name; otherwise, it indicates cancellation. */
+/* Handle the "books:select-file" event to open a dialog to select a file. */
 electron_1.ipcMain.handle("books:select-file", async (event) => {
     const parentWindow = electron_1.BrowserWindow.fromWebContents(event.sender);
     const result = parentWindow
@@ -114,8 +105,7 @@ electron_1.ipcMain.handle("books:select-file", async (event) => {
     return { canceled: false, filePath, fileName: path.basename(filePath) };
 });
 
-/* Handle the 'books:open-file' IPC event to open a file using the default application.
-   It checks if the provided file path is valid and then uses Electron's shell module to open the file. */
+/* Handle the "books:open-file" event to open a file using the default application associated with its file type. */
 electron_1.ipcMain.handle("books:open-file", async (_event, filePath) => {
     if (typeof filePath !== "string" || filePath.length === 0) {
         throw new Error("A valid file path is required.");
@@ -123,7 +113,19 @@ electron_1.ipcMain.handle("books:open-file", async (_event, filePath) => {
     return electron_1.shell.openPath(filePath);
 });
 
-/* Handle the 'ready' event to create the main application window when the app is ready. */
+/* Handle the "books:file-size" event to return the size of an associated file in bytes. */
+electron_1.ipcMain.handle("books:file-size", async (_event, filePath) => {
+    if (typeof filePath !== "string" || filePath.length === 0) {
+        throw new Error("A valid file path is required.");
+    }
+    const fileStats = await (0, promises_1.stat)(filePath);
+    if (!fileStats.isFile()) {
+        throw new Error("The selected path is not a file.");
+    }
+    return fileStats.size;
+});
+
+/* Handle the "ready" event to create the main application window when the app is ready. */
 electron_1.app.whenReady().then(() => {
     createWindow();
     electron_1.app.on("activate", () => {
@@ -132,7 +134,7 @@ electron_1.app.whenReady().then(() => {
     });
 });
 
-/* Handle the 'window-all-closed' event to quit the application when all windows are closed. */
+/* Handle the "window-all-closed" event to quit the application when all windows are closed. */
 electron_1.app.on("window-all-closed", () => {
     electron_1.app.quit();
 });
