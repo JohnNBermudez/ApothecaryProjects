@@ -149,6 +149,13 @@ body,
   font-size: 14.25px;
 }
 
+.utility-action-button__book-copy-icon {
+  display: block;
+  width: 23px;
+  height: 23px;
+  filter: drop-shadow(1px 1px 1px #291408);
+}
+
 /* Define the appearance of the (utility action button label), including font size, line height, text alignment, and text shadow */
 .utility-action-button__label {
   font-size: 8.25px;
@@ -190,6 +197,7 @@ body,
   font-size: 11px;
   line-height: 1.3;
   text-align: center;
+  overflow-wrap: anywhere;
 }
 
 /* Define the appearance of the (desktop workspace), including position, inset, minimum width, background properties, and image rendering */
@@ -272,6 +280,14 @@ body,
   filter: drop-shadow(0 0 8px #f29a79);
 }
 
+.desktop-item--copyable {
+  cursor: pointer;
+}
+
+.desktop-item--copyable:hover {
+  filter: drop-shadow(0 0 6px rgb(229 190 118 / 80%));
+}
+
 /* Define the appearance of the (desktop item icon), including display, flex properties, minimum height, width, height, place items, 
    border, border radius, background gradient, box shadow, font size, and line height */
 .desktop-item__icon {
@@ -316,4 +332,69 @@ body,
 .desktop-item:hover .desktop-item__tooltip,
 .desktop-item:focus-visible .desktop-item__tooltip {
   visibility: visible;
+}
+
+.bookshelf-filepath-bar {
+  position: absolute;
+  z-index: 4;
+  display: block;
+  margin: 0;
+  padding: 0 6px;
+  overflow-x: auto;
+  border: 1px solid rgb(160 128 174 / 70%);
+  background: rgb(16 0 16 / 88%);
+  box-shadow: inset 0 0 0 1px rgb(51 27 11 / 65%);
+  color: #fff2d7;
+  line-height: 1;
+  text-align: center;
+  text-shadow: 1px 1px 2px #291408;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+
+.bookshelf-filepath-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.bookshelf-filepath-bar:focus-visible {
+  outline: 1px solid #fff2d7;
+  outline-offset: 1px;
+}
+
+/* The copy confirmation starts by the book title, then floats upward and fades away. */
+.desktop-item__copy-feedback {
+  position: absolute;
+  z-index: 4;
+  top: 12%;
+  left: 50%;
+  padding: 3px 7px;
+  border: 1px solid rgb(160 128 174 / 70%);
+  border-radius: 3px;
+  background: rgb(16 0 16 / 88%);
+  box-shadow: 1px 2px 3px rgb(0 0 0 / 45%);
+  color: #fff2d7;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.1;
+  text-shadow: 1px 1px 2px #291408;
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translate(-50%, 0);
+  animation: copy-feedback-float 1.15s ease-out forwards;
+}
+
+@keyframes copy-feedback-float {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0) scale(0.96);
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -32px) scale(1);
+  }
 }

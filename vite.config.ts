@@ -6,6 +6,7 @@ import path from "path";
    which is used to configure the build process
    and settings for the project */
 export default defineConfig({
+    base: "./",
     plugins: [react()],
     resolve: {
     alias: {

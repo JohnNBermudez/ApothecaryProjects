@@ -1,16 +1,24 @@
-import {app, BrowserWindow, dialog, ipcMain, shell} from "electron";
+import {app, BrowserWindow, clipboard, dialog, ipcMain, shell} from "electron";
 import { stat } from "node:fs/promises";
 import * as path from "path";
+
+/* Keep the Electron profile name stable so browser storage remains in the user's app-data folder. */
+app.setName("Application Bookcase");
 
 /* This is the main process file for the ApothecaryProjects Electron application.
    It sets up the main application window, handles IPC events for file selection and opening,
    and manages the application's lifecycle events. */
 function createWindow() {
+  const iconPath = app.isPackaged
+    ? path.join(process.resourcesPath, "app-icon.ico")
+    : path.join(__dirname, "..", "assets", "icons", "bookshelf-empty.png");
   const win = new BrowserWindow({
     width: 1280,
     height: 800,
     minWidth: 758,
     minHeight: 696,
+    title: "Application Bookcase",
+    icon: iconPath,
     backgroundColor: "#3b2415",
     fullscreenable: true,
     webPreferences: {
@@ -19,8 +27,13 @@ function createWindow() {
     },
   });
 
-  win.loadURL("http://localhost:5173");
-  win.webContents.openDevTools();
+  /* Use the Vite server only during development; installed builds load their packaged renderer. */
+  if (app.isPackaged) {
+    win.loadFile(path.join(app.getAppPath(), "dist", "index.html"));
+  } else {
+    win.loadURL("http://localhost:5173");
+    win.webContents.openDevTools();
+  }
 
   /* Handle the "before-input-event" to allow toggling full-screen mode with F11 and exiting full-screen mode with Escape. */
   win.webContents.on("before-input-event", (event, input) => {
@@ -64,6 +77,16 @@ ipcMain.handle("books:open-file", async (_event, filePath: unknown) => {
   }
 
   return shell.openPath(filePath);
+});
+
+/* Write a validated book path to the system clipboard from Electron's main process. */
+ipcMain.handle("books:copy-filepath", (_event, filePath: unknown) => {
+  if (typeof filePath !== "string" || filePath.length === 0) {
+    throw new Error("A valid file path is required.");
+  }
+
+  clipboard.writeText(filePath);
+  return true;
 });
 
 /* Handle the "books:file-size" event to return the size of an associated file in bytes. */

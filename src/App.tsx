@@ -15,17 +15,24 @@ export default function App() {
     selectedId,
     isAddHovered,
     isDeleteMode,
+    isCopyFilepathMode,
     statusMessage,
+    hoveredBook,
+    copiedFeedback,
     utilityColumnLeft,
     utilityColumnTop,
     utilityColumnScale,
+    filePathBarStyle,
     surfaceRef,
     setIsAddHovered,
+    setHoveredBook,
     getItemPosition,
     handlePointerMove,
     handlePointerUp,
     handleAddBook,
     handleDeleteMode,
+    handleCopyFilepathMode,
+    handleCopyBookFilepath,
     handleDeleteBook,
     handleAlphabeticalSort,
     handleFileSizeSort,
@@ -42,12 +49,14 @@ export default function App() {
         booksCount={books.length}
         isAddHovered={isAddHovered}
         isDeleteMode={isDeleteMode}
+        isCopyFilepathMode={isCopyFilepathMode}
         statusMessage={statusMessage}
         left={utilityColumnLeft}
         top={utilityColumnTop}
         scale={utilityColumnScale}
         onAddBook={handleAddBook}
         onDeleteMode={handleDeleteMode}
+        onCopyFilepathMode={handleCopyFilepathMode}
         onAlphabeticalSort={handleAlphabeticalSort}
         onFileSizeSort={handleFileSizeSort}
         onFileTypeSort={handleFileTypeSort}
@@ -67,16 +76,23 @@ export default function App() {
           drag={drag}
           previewSlot={previewSlot}
           isDeleteMode={isDeleteMode}
+          isCopyFilepathMode={isCopyFilepathMode}
           selectedId={selectedId}
+          hoveredBook={hoveredBook}
+          copiedFeedback={copiedFeedback}
+          filePathBarStyle={filePathBarStyle}
           getItemPosition={getItemPosition}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onPointerCancel={() => setDrag(null)}
           onDeleteBook={handleDeleteBook}
+          onCopyBook={handleCopyBookFilepath}
           onOpenBook={handleOpenBook}
+          onBookMouseEnter={setHoveredBook}
+          onBookMouseLeave={() => setHoveredBook(null)}
           onBookPointerDown={(event, book) => {
             if (event.button !== 0) return;
-            if (isDeleteMode) return;
+            if (isDeleteMode || isCopyFilepathMode) return;
 
             const slot = slots[positions[book.id] ?? 0];
             if (!slot) return;

@@ -10,7 +10,8 @@ export function loadBooks(): Book[] {
   try {
     const storedBooks = window.localStorage.getItem(BOOKS_STORAGE_KEY);
     if (storedBooks === null) {
-      return [];
+      /* Seed only a new profile; an intentionally empty saved shelf stays empty on later launches. */
+      return [{ id: "sample-book", name: "Example Book" }];
     }
     
     /* Parse the stored books from JSON */

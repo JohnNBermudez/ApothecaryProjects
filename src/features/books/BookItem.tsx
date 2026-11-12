@@ -85,11 +85,15 @@ type BookItemProps = {
   slot?: Slot;
   isDragged: boolean;
   isDeleteMode: boolean;
+  isCopyFilepathMode: boolean;
   isSelected: boolean;
   position: { x: number; y: number };
+  copiedFeedbackToken?: number;
   onPointerDown: (event: ReactPointerEvent<HTMLButtonElement>, book: Book) => void;
   onClick: (book: Book) => void;
   onDoubleClick: (book: Book) => void;
+  onMouseEnter: (book: Book) => void;
+  onMouseLeave: () => void;
 };
 
 /* BookItem component renders a book item on the desktop */
@@ -98,11 +102,15 @@ export function BookItem({
   slot,
   isDragged,
   isDeleteMode,
+  isCopyFilepathMode,
   isSelected,
   position,
+  copiedFeedbackToken,
   onPointerDown,
   onClick,
   onDoubleClick,
+  onMouseEnter,
+  onMouseLeave,
 }: BookItemProps) {
   /* Truncate the book name to fit within the available width */
   const displayedName = truncateBookName(book.name, slot?.width ?? 0);
@@ -111,7 +119,7 @@ export function BookItem({
   return (
     <button
       type="button"
-      className={`desktop-item${isDragged ? " desktop-item--dragging" : ""}${isDeleteMode ? " desktop-item--deletable" : ""}`}
+      className={`desktop-item${isDragged ? " desktop-item--dragging" : ""}${isDeleteMode ? " desktop-item--deletable" : ""}${isCopyFilepathMode ? " desktop-item--copyable" : ""}`}
       style={{
         left: position.x,
         top: position.y,
@@ -120,8 +128,10 @@ export function BookItem({
       }}
       onPointerDown={(event) => onPointerDown(event, book)}
       onClick={() => onClick(book)}
+      onMouseEnter={() => onMouseEnter(book)}
+      onMouseLeave={onMouseLeave}
       onDoubleClick={(event) => {
-        if (isDeleteMode) {
+        if (isDeleteMode || isCopyFilepathMode) {
           event.preventDefault();
           return;
         }
@@ -136,6 +146,15 @@ export function BookItem({
       <span className="desktop-item__tooltip" style={{ fontSize: displayedName.fontSize }} role="tooltip">
         {displayedName.text}
       </span>
+      {copiedFeedbackToken !== undefined && (
+        <span
+          key={copiedFeedbackToken}
+          className="desktop-item__copy-feedback"
+          aria-live="polite"
+        >
+          Path Copied
+        </span>
+      )}
     </button>
   );
 }

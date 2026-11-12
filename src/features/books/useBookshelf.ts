@@ -37,7 +37,23 @@ export function useBookshelf() {
   const [drag, setDrag] = useState<DragState | null>(null);
   const [isAddHovered, setIsAddHovered] = useState(false);
   const [isDeleteMode, setIsDeleteMode] = useState(false);
+  const [isCopyFilepathMode, setIsCopyFilepathMode] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
+  const [hoveredBook, setHoveredBook] = useState<Book | null>(null);
+  const [copiedFeedback, setCopiedFeedback] = useState<{ id: string; token: number } | null>(null);
+  const feedbackToken = useRef(0);
+
+  /* Remove copy feedback after its floating animation has had time to finish. */
+  useEffect(() => {
+    if (!copiedFeedback) return;
+
+    const timeout = window.setTimeout(() => {
+      setCopiedFeedback((current) =>
+        current?.token === copiedFeedback.token ? null : current,
+      );
+    }, 1200);
+    return () => window.clearTimeout(timeout);
+  }, [copiedFeedback]);
 
   /* Persist the bookshelf state to local storage whenever books or positions change */
   useEffect(() => {
@@ -97,10 +113,20 @@ export function useBookshelf() {
     viewportSize.height / BOOKSHELF_HEIGHT,
   );
   // Match the toolbar's right edge to the left edge of the centered, scaled bookshelf image.
-  const utilityColumnLeft = (viewportSize.width - BOOKSHELF_WIDTH * imageScale) / 2;
-  const utilityColumnTop = (viewportSize.height - BOOKSHELF_HEIGHT * imageScale) / 2;
+  const imageLeft = (viewportSize.width - BOOKSHELF_WIDTH * imageScale) / 2;
+  const imageTop = (viewportSize.height - BOOKSHELF_HEIGHT * imageScale) / 2;
+  const utilityColumnLeft = imageLeft;
+  const utilityColumnTop = imageTop;
   const utilityColumnScale = imageScale || 1;
   const slots = createSlots(viewportSize, imageScale);
+  /* Place the path bar inside the divider and inset it from the image's decorative frame. */
+  const filePathBarStyle = {
+    left: imageLeft + 18 * imageScale,
+    top: imageTop + 242 * imageScale,
+    width: (BOOKSHELF_WIDTH - 36) * imageScale,
+    height: 16 * imageScale,
+    fontSize: 10 * imageScale,
+  };
 
   /* Create the slots for the bookshelf based on the viewport size and image scale */
   const draggedItem = drag?.moved ? books.find((book) => book.id === drag.id) : undefined;
@@ -209,9 +235,35 @@ export function useBookshelf() {
   const handleDeleteMode = () => {
     const nextDeleteMode = !isDeleteMode;
     setIsDeleteMode(nextDeleteMode);
+    setIsCopyFilepathMode(false);
     setStatusMessage(
       nextDeleteMode && books.length === 0 ? "There are no books to delete." : "",
     );
+  };
+
+  /* Copy mode temporarily replaces book dragging/opening until a path is copied or canceled. */
+  const handleCopyFilepathMode = () => {
+    setIsCopyFilepathMode((current) => !current);
+    setIsDeleteMode(false);
+    setStatusMessage("");
+  };
+
+  /* Write paths through the Electron main process clipboard API; failures leave copy mode active. */
+  const handleCopyBookFilepath = async (book: Book) => {
+    if (!book.filePath) {
+      setStatusMessage("This book does not have a file path to copy.");
+      return;
+    }
+
+    try {
+      await window.apothecary.copyFilePath(book.filePath);
+      setIsCopyFilepathMode(false);
+      setStatusMessage("");
+      setCopiedFeedback({ id: book.id, token: ++feedbackToken.current });
+    } catch (error) {
+      console.error("Could not copy the book file path.", error);
+      setStatusMessage("The file path could not be copied to the clipboard.");
+    }
   };
 
   /* Handle the deletion of a book from the bookshelf */
@@ -229,7 +281,9 @@ export function useBookshelf() {
     setBooks(remainingBooks);
     setPositions(remainingPositions);
     setSelectedId((current) => (current === id ? null : current));
+    setHoveredBook(null);
     setIsDeleteMode(false);
+    setIsCopyFilepathMode(false);
     setStatusMessage("");
   };
 
@@ -318,17 +372,24 @@ export function useBookshelf() {
     selectedId,
     isAddHovered,
     isDeleteMode,
+    isCopyFilepathMode,
     statusMessage,
+    hoveredBook,
+    copiedFeedback,
     surfaceRef,
     utilityColumnLeft,
     utilityColumnTop,
     utilityColumnScale,
+    filePathBarStyle,
     setIsAddHovered,
+    setHoveredBook,
     getItemPosition,
     handlePointerMove,
     handlePointerUp,
     handleAddBook,
     handleDeleteMode,
+    handleCopyFilepathMode,
+    handleCopyBookFilepath,
     handleDeleteBook,
     handleAlphabeticalSort,
     handleFileSizeSort,

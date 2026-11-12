@@ -5,5 +5,6 @@ import { contextBridge, ipcRenderer } from "electron";
 contextBridge.exposeInMainWorld("apothecary", {
   selectFile: () => ipcRenderer.invoke("books:select-file"),
   openFile: (filePath: string) => ipcRenderer.invoke("books:open-file", filePath),
+  copyFilePath: (filePath: string) => ipcRenderer.invoke("books:copy-filepath", filePath),
   getFileSize: (filePath: string) => ipcRenderer.invoke("books:file-size", filePath),
 });

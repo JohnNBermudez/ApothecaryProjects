@@ -1,6 +1,3 @@
-/* This is the main process file for the ApothecaryProjects Electron application.
-   It sets up the main application window, handles IPC events for file selection and opening,
-   and manages the application's lifecycle events. */
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -8,34 +5,25 @@ var __createBinding = (this && this.__createBinding) || (Object.create ? (functi
     if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
       desc = { enumerable: true, get: function() { return m[k]; } };
     }
-    /* Define the property on the target object with the descriptor. */
     Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
 }));
-
-/* This is a helper function to set the default value of a module.
-   It is used to set the default value of the "default" export of a module. */
 var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
     Object.defineProperty(o, "default", { enumerable: true, value: v });
 }) : function(o, v) {
     o["default"] = v;
 });
-/* This is a helper function to import a module.
-   It is used to import modules in a way that is compatible with both CommonJS and ES modules. */
 var __importStar = (this && this.__importStar) || (function () {
     var ownKeys = function(o) {
         ownKeys = Object.getOwnPropertyNames || function (o) {
             var ar = [];
             for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            /* Return the array of own property names. */
             return ar;
         };
-        /* Get the own property names of the object. */
         return ownKeys(o);
     };
-    /* This function returns a function that imports a module and ensures it is compatible with both CommonJS and ES modules. */
     return function (mod) {
         if (mod && mod.__esModule) return mod;
         var result = {};
@@ -44,22 +32,26 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
-/* This is a helper function to import a module.
-   It is used to import modules in a way that is compatible with both CommonJS and ES modules. */
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 const promises_1 = require("node:fs/promises");
 const path = __importStar(require("path"));
-
+/* Keep the Electron profile name stable so browser storage remains in the user's app-data folder. */
+electron_1.app.setName("Application Bookcase");
 /* This is the main process file for the ApothecaryProjects Electron application.
    It sets up the main application window, handles IPC events for file selection and opening,
    and manages the application's lifecycle events. */
 function createWindow() {
+    const iconPath = electron_1.app.isPackaged
+        ? path.join(process.resourcesPath, "app-icon.ico")
+        : path.join(__dirname, "..", "assets", "icons", "bookshelf-empty.png");
     const win = new electron_1.BrowserWindow({
         width: 1280,
         height: 800,
         minWidth: 758,
         minHeight: 696,
+        title: "Application Bookcase",
+        icon: iconPath,
         backgroundColor: "#3b2415",
         fullscreenable: true,
         webPreferences: {
@@ -67,11 +59,15 @@ function createWindow() {
             preload: path.join(__dirname, "preload.js"),
         },
     });
-    /* Load the Vite dev server URL into the main window. */
-    win.loadURL("http://localhost:5173");
-    win.webContents.openDevTools();
-    
-/* Handle the "before-input-event" to allow toggling full-screen mode with F11 and exiting full-screen mode with Escape. */
+    /* Use the Vite server only during development; installed builds load their packaged renderer. */
+    if (electron_1.app.isPackaged) {
+        win.loadFile(path.join(electron_1.app.getAppPath(), "dist", "index.html"));
+    }
+    else {
+        win.loadURL("http://localhost:5173");
+        win.webContents.openDevTools();
+    }
+    /* Handle the "before-input-event" to allow toggling full-screen mode with F11 and exiting full-screen mode with Escape. */
     win.webContents.on("before-input-event", (event, input) => {
         if (input.key === "F11") {
             win.setFullScreen(!win.isFullScreen());
@@ -82,7 +78,6 @@ function createWindow() {
             event.preventDefault();
         }
     });
-    
     /* Handle the "before-input-event" to allow quitting the application with Ctrl + F4. */
     win.webContents.on("before-input-event", (event, input) => {
         if (input.key === "F4" && input.control) {
@@ -91,7 +86,6 @@ function createWindow() {
         }
     });
 }
-
 /* Handle the "books:select-file" event to open a dialog to select a file. */
 electron_1.ipcMain.handle("books:select-file", async (event) => {
     const parentWindow = electron_1.BrowserWindow.fromWebContents(event.sender);
@@ -104,7 +98,6 @@ electron_1.ipcMain.handle("books:select-file", async (event) => {
     const filePath = result.filePaths[0];
     return { canceled: false, filePath, fileName: path.basename(filePath) };
 });
-
 /* Handle the "books:open-file" event to open a file using the default application associated with its file type. */
 electron_1.ipcMain.handle("books:open-file", async (_event, filePath) => {
     if (typeof filePath !== "string" || filePath.length === 0) {
@@ -112,28 +105,36 @@ electron_1.ipcMain.handle("books:open-file", async (_event, filePath) => {
     }
     return electron_1.shell.openPath(filePath);
 });
-
+/* Write a validated book path to the system clipboard from Electron's main process. */
+electron_1.ipcMain.handle("books:copy-filepath", (_event, filePath) => {
+    if (typeof filePath !== "string" || filePath.length === 0) {
+        throw new Error("A valid file path is required.");
+    }
+    electron_1.clipboard.writeText(filePath);
+    return true;
+});
 /* Handle the "books:file-size" event to return the size of an associated file in bytes. */
 electron_1.ipcMain.handle("books:file-size", async (_event, filePath) => {
     if (typeof filePath !== "string" || filePath.length === 0) {
         throw new Error("A valid file path is required.");
     }
+    /* Get the file statistics to determine the file size */
     const fileStats = await (0, promises_1.stat)(filePath);
     if (!fileStats.isFile()) {
         throw new Error("The selected path is not a file.");
     }
+    /* Return the file size in bytes */
     return fileStats.size;
 });
-
 /* Handle the "ready" event to create the main application window when the app is ready. */
 electron_1.app.whenReady().then(() => {
     createWindow();
+    /* Handle the "activate" event to create a new window if no windows exist */
     electron_1.app.on("activate", () => {
         if (electron_1.BrowserWindow.getAllWindows().length === 0)
             createWindow();
     });
 });
-
 /* Handle the "window-all-closed" event to quit the application when all windows are closed. */
 electron_1.app.on("window-all-closed", () => {
     electron_1.app.quit();

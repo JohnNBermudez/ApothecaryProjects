@@ -145,5 +145,8 @@ vite.config.ts.timestamp-*
 # Astro generated types
 .astro/
 
+# Electron Builder output (installers and unpacked application)
+/release/
+
 # Turbo Repo
 .turbo
